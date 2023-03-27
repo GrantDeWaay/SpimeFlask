@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strand</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+    <h1>Package ID: {{ id }}</h1>
+    {% for message in history %}
+    <div>{{ message }}</div><br>
+    {% endfor %}
+</body>
+</html>

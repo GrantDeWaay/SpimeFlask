@@ -1,0 +1,12 @@
+from enum import Enum
+
+
+class OPS(Enum):
+	GET_CRATE = 1
+	POST_CRATE = 2
+	GET_LOCATION = 3
+	POST_LOCATION = 4
+	POST_TRANSACTION = 5
+	GET_TRANSACTIONS = 6
+	DELETE_ALL = 999
+
