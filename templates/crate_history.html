@@ -6,9 +6,20 @@
     <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
-    <h1>Package ID: {{ id }}</h1>
+<div><h1>Package ID: {{ id }}</h1>
+    <img class="qr" src= {{image}} alt="QR code"></div>
+
+    <table>
+        <tr>
+            <th>Location</th>
+            <th>Timestamp</th>
+        </tr>
     {% for message in history %}
-    <div>{{ message }}</div><br>
+        <tr>
+            <td>{{ message[1] }}</td>
+            <td>{{ message[0] }}</td>
+        </tr>
     {% endfor %}
+    </table>
 </body>
 </html>
