@@ -9,8 +9,6 @@ app = Flask(__name__)
 @app.route("/crate/<crateid>")
 def consumer_view(crateid):
 	return render_template('/crate_history.html', id=crateid, history=DB().execute(OPS.GET_TRANSACTIONS, crateid), image="/api/qr/"+crateid)
-
-
 @app.route("/api/crate", methods=['POST', 'GET'])
 def crate():
 	if request.method == 'POST':
@@ -56,4 +54,4 @@ def location_links():
 	return 404
 
 if __name__ == '__main__':
-	app.run(host='127.0.0.1', port=5000)
+	app.run(host='0.0.0.0', port=5000)

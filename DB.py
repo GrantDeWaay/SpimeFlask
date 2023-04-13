@@ -1,10 +1,13 @@
 from dotenv import dotenv_values
 from neo4j import GraphDatabase
 
-from StrandRSA import create_keypair
+from neo4j.time import DateTime
+from datetime import datetime
 from enums import OPS
 
-#TODO: Use google maps API to map routes, make connections, give locations PlaceIDs and estimate
+# TODO: OBJECT RELATIONAL MAPPING
+
+# TODO: Use google maps API to map routes, make connections, give locations PlaceIDs and estimate
 #		time of arrival and emissions to generate ESG reports
 class DB(object):
 	config = dotenv_values("config.env")
@@ -63,25 +66,32 @@ class DB(object):
 	@staticmethod
 	def _post_approved_connection(tx, data):
 		tx.run("MATCH (lFrom:Location) "
-				"WHERE lFrom.id = $loc1id "
-				"MATCH (lTo:Location) "
-				"WHERE lTo.id = $loc2id "
-				"CREATE (lFrom)-[:APPROVED_ROUTE]->(lTo)", loc1id=data["loc1"], loc2id=data["loc2"])
+			   "WHERE lFrom.id = $loc1id "
+			   "MATCH (lTo:Location) "
+			   "WHERE lTo.id = $loc2id "
+			   "CREATE (lFrom)-[:APPROVED_ROUTE]->(lTo)", loc1id=data["loc1"], loc2id=data["loc2"])
 		return "", 200
 
 	@staticmethod
-	def _get_approved_connections(tx,data):
+	def _get_approved_connections(tx, data):
 		result = tx.run("MATCH (l:Location)-[:APPROVED_ROUTE]->(lr:Location) "
-			   "WHERE l.id = $locid "
-			   "RETURN lr as lr ", locid=data['locid'])
+						"WHERE l.id = $locid "
+						"RETURN lr as lr ", locid=data['locid'])
 		return [{"locid": record["lr"]["id"]}
 				for record in result], 200
+
 	@staticmethod
 	def _get_location(tx, data):
 		result = tx.run("MATCH (l:Location) "
 						"WHERE l.id = $id "
 						"RETURN l as Locations", id=data['locid'])
 		return [record["Locations"] for record in result].__str__(), 200
+
+	@staticmethod
+	def _get_locations(tx, data):
+		result = tx.run("MATCH (l:Location) "
+						"RETURN l as Locations", id=data['locid'])
+		return [(record["Locations"], record['']) for record in result].__str__(), 200
 
 	@staticmethod
 	def _get_crate(tx, data):
@@ -98,21 +108,22 @@ class DB(object):
 
 	@staticmethod
 	def _post_transaction(tx, data):
+		print(data["crateid"])
+		print(data["locid"])
 		result = tx.run("MATCH "
 						"(c:Crate {id: $id})-[r:HEAD]->(tOld:Transaction), "
 						"(l:Location {id: $sentto}) "
 						"DELETE r "
 						"CREATE (tNew:Transaction {timestamp: localdatetime.transaction()}), "
 						"(c)-[:HEAD]->(tNew)-[:SENT_TO]->(l), "
-						"(tOld)-[:MOVED]->(tNew)"
+						"(tOld)-[:MOVED]->(tNew) "
 						"RETURN tNew as Transaction", id=data["crateid"], sentto=data["locid"])
 		return [{"Transaction": record["Transaction"]["timestamp"]}
 				for record in result], 200
-
 
 	@staticmethod
 	def _get_all_transactions_of_crate(tx, data):
 		result = tx.run("MATCH (c:Crate {id: $id})-[:MOVED*]->(tList:Transaction)-[:SENT_TO]->(lList:Location) "
 						"RETURN tList AS Transactions, lList AS Locations", id=data)
-		return [(record["Transactions"]["timestamp"] , record["Locations"]["name"]) for record in result]
+		return [(record["Transactions"]["timestamp"].strftime("%m/%d/%Y, %H:%M:%S"), record["Locations"]["name"]) for record in result]
 # Do not use loops if you care about performace in python, try to refactor it into a vector operator or something

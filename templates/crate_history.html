@@ -3,7 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Strand</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        body {
+            background-color: #1d1f20;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-top: 50px;
+            text-align: center;
+        }
+        img.qr {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+            height: 200px;
+            animation: table-fade-in 2s forwards;
+        }
+        table {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: table-fade-in 2s forwards;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background-color: #222222;
+        }
+        @keyframes table-fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
 <div><h1>Package ID: {{ id }}</h1>
