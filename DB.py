@@ -125,13 +125,17 @@ class DB(object):
                         "(c)-[:HEAD]->(tNew)-[:SENT_TO]->(l), "
                         "(tOld)-[:MOVED]->(tNew) "
                         "RETURN tNew as Transaction", id=data["crateid"], sentto=data["locid"])
-        return [{"Transaction": record["Transaction"]["timestamp"]}
+        return [{"Transaction": record["Transaction"]["timestamp"].strftime("%m/%d/%Y, %H:%M")}
                 for record in result], 200
 
+    @staticmethod
+    def _del_transaction_pop(tx, data):
+        result = tx.run("MATCH "
+                        "(c:Crate {id: $id})-[r:HEAD]->(tOld:Transaction),")
     @staticmethod
     def _get_all_transactions_of_crate(tx, data):
         result = tx.run("MATCH (c:Crate {id: $id})-[:MOVED*]->(tList:Transaction)-[:SENT_TO]->(lList:Location) "
                         "RETURN tList AS Transactions, lList AS Locations", id=data)
-        return [(record["Transactions"]["timestamp"].strftime("%m/%d/%Y, %H:%M:%S"), record["Locations"]["name"]) for
+        return [(record["Transactions"]["timestamp"].strftime("%m/%d/%Y, %H:%M"), record["Locations"]["name"]) for
                 record in result]
 # Do not use loops if you care about performace in python, try to refactor it into a vector operator or something

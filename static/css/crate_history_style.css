@@ -7,23 +7,23 @@ body {
 h1 {
     font-size: 2.5em;
     margin-top: 50px;
-    text-align: center;
+    text-align: left;
 }
 
-img.qr {
+img{
+    max-width: 200px;
     display: block;
-    margin: 0 auto;
-    width: 200px;
-    height: 200px;
-    animation: table-fade-in 2s forwards;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
 }
+
 
 table {
     margin-top: 50px;
     margin-bottom: 50px;
     border-collapse: collapse;
-    width: 80%;
-    max-width: 800px;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     animation: table-fade-in 2s forwards;
@@ -31,14 +31,19 @@ table {
 
 th, td {
     padding: 15px;
+    font-size: xxx-large;
     text-align: left;
     border-bottom: 1px solid #ddd;
+}
+
+p{
+    text-align: center;
+    font-size: xx-large;
 }
 
 tr:hover {
     background-color: #222222;
 }
-
 @keyframes table-fade-in {
     0% {
         opacity: 0;
